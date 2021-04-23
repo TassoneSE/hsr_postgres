@@ -26,7 +26,7 @@ COPY config/registry.yaml.template /opt/hortonworks-registry/conf/registry.yaml.
 COPY entrypoint.sh /opt/hortonworks-registry/entrypoint.sh
 COPY wait-for-it.sh /opt/hortonworks-registry/wait-for-it.sh
 
-RUN chmod 755 -R  /opt/hortonworks-registry/ && \
+RUN chmod 655  /opt/hortonworks-registry/conf/registry.yaml && \
     chmod +x /opt/hortonworks-registry/entrypoint.sh && \
     chmod +x /opt/hortonworks-registry/wait-for-it.sh && \
     chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.9.1
