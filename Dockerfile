@@ -4,27 +4,27 @@
 
 from openjdk:11
 
-RUN adduser hortonworks
+#RUN adduser hortonworks
 
 RUN apt-get update && \
     apt-get install -y gettext-base && \
     rm -rf /var/lib/apt/lists/* && \
-#    groupadd -r hortonworks && useradd --no-log-init -r -g hortonworks hortonworks && \
+    groupadd -r hortonworks && useradd --no-log-init -r -g hortonworks hortonworks && \
     mkdir -p /opt/ && \
     wget -O /opt/hortonworks-registry-0.9.1.zip https://github.com/hortonworks/registry/releases/download/0.9.1-rc1/hortonworks-registry-0.9.1.zip && \
     unzip /opt/hortonworks-registry-0.9.1.zip -d /opt && \
-    chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.9.1 && \
-    rm /opt/hortonworks-registry-0.9.1.zip && \
-    ln -s /opt/hortonworks-registry-0.9.1 /opt/hortonworks-registry
+    #chown +X /opt/hortonworks-registry-0.9.1 && \
+    rm /opt/hortonworks-registry-0.9.1.zip
+    #ln -s /opt/hortonworks-registry-0.9.1 /opt/hortonworks-registry
 
-WORKDIR /opt/hortonworks-registry
+WORKDIR /opt/hortonworks-registry-0.9.1
 
-COPY config/registry.yaml.template /opt/hortonworks-registry/conf/registry.yaml.template
-COPY entrypoint.sh /opt/hortonworks-registry/entrypoint.sh
-COPY wait-for-it.sh /opt/hortonworks-registry/wait-for-it.sh
+COPY config/registry.yaml.template /opt/hortonworks-registry-0.9.1/conf/registry.yaml.template
+COPY entrypoint.sh /opt/hortonworks-registry-0.9.1/entrypoint.sh
+COPY wait-for-it.sh /opt/hortonworks-registry-0.9.1/wait-for-it.sh
 
-RUN chmod +x /opt/hortonworks-registry/entrypoint.sh && \
-    chmod +x /opt/hortonworks-registry/wait-for-it.sh && \
+RUN chmod +x /opt/hortonworks-registry-0.9.1/entrypoint.sh && \
+    chmod +x /opt/hortonworks-registry-0.9.1/wait-for-it.sh && \
     chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.9.1
 
 
