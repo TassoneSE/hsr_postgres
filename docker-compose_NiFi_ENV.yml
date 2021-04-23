@@ -1,0 +1,138 @@
+# Will spin up NiFi Dev Environment
+# Go to the directory where this file has been saved, then run:
+# Download all the docker images:
+# docker-compose pull
+# Start up the docker compose file with debugging in terminal:
+# docker-compose up --detach --remove-orphans
+# To stop Docker:
+# docker-compose up
+# To stop and remove resources:
+# docker-compose down
+# Use to see help menu
+# docker-compose --help
+
+
+version: "3.9"
+services:
+
+#zookeeper
+  zookeeper:
+    #hostname: zookeeper
+    #container_name: zookeeper
+    image: 'bitnami/zookeeper:latest'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      nifi_net:
+        ipv4_address: 172.18.18.10
+
+# NiFi01
+# Main UI: http://localhost:6980/nifi/
+  nifi01:
+    image: apache/nifi:1.11.4
+    ports:
+      - 6980:8080
+    networks:
+      nifi_net:
+        ipv4_address: 172.18.18.50
+    depends_on:
+      - zookeeper
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_ELECTION_MAX_WAIT=1 min
+ #   volumes:
+ #   # Using external volumes is not a good idea. this will slow down the docker image. However good for debugging
+ #     - ./nifi/state:/opt/nifi/nifi-current/state
+ #     - ./nifi/db:/opt/nifi/nifi-current/database_repository
+ #     - ./nifi/flowfile:/opt/nifi/nifi-current/flowfile_repository
+ #     - ./nifi/content:/opt/nifi/nifi-current/content_repository
+ #     - ./nifi/provenance:/opt/nifi/nifi-current/provenance_repository
+ #     - ./nifi/logs:/opt/nifi/nifi-current/logs
+
+# NiFi02
+# Main UI: http://localhost:6979/nifi/
+  nifi02:
+    image: apache/nifi:1.11.4
+    ports:
+      - 6979:8080
+    networks:
+      nifi_net:
+        ipv4_address: 172.18.18.51
+    depends_on:
+      - zookeeper
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_ELECTION_MAX_WAIT=1 min
+
+# Postgres for schema_registry
+  postgres:
+    image: postgres:latest # use latest official postgres version
+    ports:
+      - 5432:5432
+    networks:
+      nifi_net:
+        ipv4_address: 172.18.18.20      
+    environment:
+      - POSTGRES_USER=dev_hsr_usr
+      - POSTGRES_PASSWORD=password1234
+      - POSTGRES_DB=DEV_HSR_DB
+ #   volumes:
+ #     - ./postgres:/var/lib/postgresql/data/ # persist data even if container shuts down
+
+# Hortonworks Schema Registry
+# Main UI : http://localhost:9090/ui/#/
+# Swagger UI: http://localhost:9090/swagger
+  schema_registry: 
+    # This will pull down from docker hub after 24 hours
+    image: tassonese/hsr_postgres:0.5
+    # This will build from Dockerfile in same path as this yml file
+    #build: .
+    depends_on:
+      - postgres
+    ports:
+      - "9090:9090"
+    networks:
+      nifi_net:
+        ipv4_address: 172.18.18.30
+    environment:
+      DB_NAME: HSR_DB
+      DB_USER: dev_hsr_usr
+      DB_PASSWORD: password1234
+      DB_PORT: 5432
+      DB_HOST: postgres
+
+# Nifi Registry
+# Main UI: http://localhost:18080/nifi-registry/
+# Client URL: http://172.18.18.1:18080
+  nifi-registry:
+    image: apache/nifi-registry:latest
+    ports:
+     - 18080:18080
+    networks:
+      nifi_net:
+        ipv4_address: 172.18.18.40
+    environment:
+     - LOG_LEVEL=INFO
+     - NIFI_REGISTRY_DB_DIR=/opt/nifi-registry/database
+     - NIFI_REGISTRY_FLOW_PROVIDER=file
+     - NIFI_REGISTRY_FLOW_STORAGE_DIR=/opt/nifi-registry/flow_storage
+ #   volumes:
+ #    - ./nifi-reg/database:/opt/nifi-registry/database
+ #    - ./nifi-reg/flow_storage:/opt/nifi-registry/flow_storage
+
+networks:
+  nifi_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.18.18.0/24
+        gateway: 172.18.18.1
