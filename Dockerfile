@@ -4,10 +4,12 @@
 
 from openjdk:11
 
+RUN adduser hortonworks
+
 RUN apt-get update && \
     apt-get install -y gettext-base && \
     rm -rf /var/lib/apt/lists/* && \
-    groupadd -r hortonworks && useradd --no-log-init -r -g hortonworks hortonworks && \
+#    groupadd -r hortonworks && useradd --no-log-init -r -g hortonworks hortonworks && \
     mkdir -p /opt/ && \
     wget -O /opt/hortonworks-registry-0.9.1.zip https://github.com/hortonworks/registry/releases/download/0.9.1-rc1/hortonworks-registry-0.9.1.zip && \
     unzip /opt/hortonworks-registry-0.9.1.zip -d /opt && \
