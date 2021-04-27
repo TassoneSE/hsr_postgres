@@ -47,7 +47,7 @@ USER 1001
 
 ENTRYPOINT ["sh", "./entrypoint.sh"]
 
-CMD ["./bin/registry-server-start.sh","./conf/registry.yaml"]
+CMD ["sh", "./bin/registry-server-start.sh","./conf/registry.yaml"]
 
 
 
