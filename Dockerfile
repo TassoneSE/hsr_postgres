@@ -45,11 +45,11 @@ ENV DB_PORT 3306
 EXPOSE 9090
 
 #USER hortonworks
-USER root
+USER hortonworks
 
 ENTRYPOINT ["sh", "./entrypoint.sh"]
 
-CMD ["sh", "./bin/registry-server-start.sh","./conf/registry.yaml"]
+CMD ["./bin/registry-server-start.sh","./conf/registry.yaml"]
 
 
 
