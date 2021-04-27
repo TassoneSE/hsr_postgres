@@ -29,6 +29,7 @@ COPY wait-for-it.sh /opt/hortonworks-registry/wait-for-it.sh
 
 RUN chmod +x /opt/hortonworks-registry/entrypoint.sh && \
     chmod +x /opt/hortonworks-registry/wait-for-it.sh && \
+    chmod +x /opt/hortonworks-registry/bin/*  && \
     chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.9.1
     
 # Fix the permissions when running in OpenShift
