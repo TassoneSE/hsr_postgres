@@ -18,8 +18,8 @@ RUN apt-get update && \
     unzip /opt/hortonworks-registry-0.9.1.zip -d /opt && \
     chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.9.1 && \
     rm /opt/hortonworks-registry-0.9.1.zip && \
-    ln -s /opt/hortonworks-registry-0.9.1 /opt/hortonworks-registry
-    #mkdir -p /opt/hortonworks-registry/logs
+    ln -s /opt/hortonworks-registry-0.9.1 /opt/hortonworks-registry && \
+    mkdir -p /opt/hortonworks-registry/logs
 
 WORKDIR /opt/hortonworks-registry
 
