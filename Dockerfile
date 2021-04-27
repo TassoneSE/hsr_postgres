@@ -45,7 +45,7 @@ EXPOSE 9090
 #USER hortonworks
 USER 1001
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]
 
 CMD ["./bin/registry-server-start.sh","./conf/registry.yaml"]
 
