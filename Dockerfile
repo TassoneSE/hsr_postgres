@@ -18,7 +18,8 @@ RUN apt-get update && \
     unzip /opt/hortonworks-registry-0.9.1.zip -d /opt && \
     chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.9.1 && \
     rm /opt/hortonworks-registry-0.9.1.zip && \
-    ln -s /opt/hortonworks-registry-0.9.1 /opt/hortonworks-registry
+    ln -s /opt/hortonworks-registry-0.9.1 /opt/hortonworks-registry && \
+    mkdir -p /opt/hortonworks-registry/logs
 
 WORKDIR /opt/hortonworks-registry
 
@@ -31,7 +32,7 @@ RUN chmod +x /opt/hortonworks-registry/entrypoint.sh && \
     chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.9.1
     
 # Fix the permissions when running in OpenShift
-RUN chmod -R a+rwx /opt/hortonworks-registry/conf /opt/hortonworks-registry/bin /opt/hortonworks-registry/libs /opt/hortonworks-registry/bootstrap
+RUN chmod -R a+rwx /opt/hortonworks-registry/conf /opt/hortonworks-registry/bin /opt/hortonworks-registry/libs /opt/hortonworks-registry/logs /opt/hortonworks-registry/bootstrap
 
 
 ENV DB_NAME schema_registry
