@@ -31,7 +31,7 @@ RUN chmod +x /opt/hortonworks-registry/entrypoint.sh && \
     chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.9.1
     
 # Fix the permissions when running in OpenShift
-RUN chmod -R a+rwx /opt/hortonworks-registry/conf /opt/hortonworks-registry/bin /opt/hortonworks-registry/log /opt/hortonworks-registry/libs /opt/hortonworks-registry/bootstrap
+RUN chmod -R a+rwx /opt/hortonworks-registry/conf /opt/hortonworks-registry/bin /opt/hortonworks-registry/libs /opt/hortonworks-registry/bootstrap
 
 
 ENV DB_NAME schema_registry
