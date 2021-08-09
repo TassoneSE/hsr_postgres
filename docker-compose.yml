@@ -1,31 +1,30 @@
 version: "3.9"
 
 services:
-  postgres:
-      image: postgres:latest # use latest official postgres version
-      ports:
-        - 5432:5432
-      networks:
-        default:
-          aliases:
+    postgres:
+        image: postgres:latest # use latest official postgres version
+        ports:
+            - 5432:5432
+        networks:
+            default:
+                aliases:
+                    - postgres
+        environment:
+            - POSTGRES_USER=dev_hsr_usr
+            - POSTGRES_PASSWORD=password1234
+            - POSTGRES_DB=DEV_HSR_DB
+        # volumes:
+        #     - ./postgres:/var/lib/postgresql/data/ # persist data even if container shuts down
+
+    registry:
+        build: .
+        depends_on:
             - postgres
-      environment:
-        - POSTGRES_USER=dev_hsr_usr
-        - POSTGRES_PASSWORD=password1234
-        - POSTGRES_DB=DEV_HSR_DB
-      volumes:
-        - ./postgres:/var/lib/postgresql/data/ # persist data even if container shuts down
-
-  registry:
-    build: .
-    depends_on:
-      - postgres
-    ports:
-      - "9090:9090"
-    environment:
-      DB_NAME: DEV_HSR_DB
-      DB_USER: dev_hsr_usr
-      DB_PASSWORD: password1234
-      DB_PORT: 5432
-      DB_HOST: postgres
-
+        ports:
+            - "9090:9090"
+        environment:
+            DB_NAME: DEV_HSR_DB
+            DB_USER: dev_hsr_usr
+            DB_PASSWORD: password1234
+            DB_PORT: 5432
+            DB_HOST: postgres

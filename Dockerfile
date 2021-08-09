@@ -14,7 +14,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     groupadd -r hortonworks && useradd --no-log-init -r -g hortonworks hortonworks && \
     mkdir -p /opt/ && \
-    wget -O /opt/hortonworks-registry-0.8.1.zip https://github.com/hortonworks/registry/releases/download/0.8.1-rc1/hortonworks-registry-0.8.1.zip && \
+    wget -O /opt/hortonworks-registry-0.8.1.zip https://github.com/hortonworks/registry/releases/download/v0.8.1-rc1/hortonworks-registry-0.8.1.zip && \
     unzip /opt/hortonworks-registry-0.8.1.zip -d /opt && \
     chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.8.1 && \
     rm /opt/hortonworks-registry-0.8.1.zip && \
@@ -34,7 +34,7 @@ RUN chmod +x /opt/hortonworks-registry/entrypoint.sh && \
     chmod +x /opt/hortonworks-registry/wait-for-it.sh && \
     chmod +x /opt/hortonworks-registry/bin/*  && \
     chown -R hortonworks:hortonworks /opt/hortonworks-registry-0.8.1
-    
+
 
 ENV DB_NAME schema_registry
 ENV DB_USER postgres
